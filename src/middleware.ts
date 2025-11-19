@@ -7,6 +7,8 @@ export async function middleware(request: NextRequest) {
     const token = await getToken({ req: request });
     const url = request.nextUrl;
 
+    //this middleware function is responsible for redirecting users based on their authentication status
+    //if user is login and have the token then redirect them away from auth pages to the home page
     // Redirect authenticated users away from auth pages
     if (token &&
         (

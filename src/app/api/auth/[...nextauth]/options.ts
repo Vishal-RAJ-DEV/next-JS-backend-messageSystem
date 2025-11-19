@@ -17,8 +17,9 @@ export const authOptions: NextAuthOptions = {
                 try {
                     const user = await UserModel.findOne({
                         $or: [
-                            { email: credentials.email }, //here credentials.email is the email or username entered by the user that allows user to login with either email or username by searching in database
-                            { username: credentials.email } //allowing user to login with either email or username
+                            //here identifier can be either email or username which is passed from the sign-in form form the frontend
+                            { email: credentials.identifier }, //here credentials.email is the email or username entered by the user that allows user to login with either email or username by searching in database
+                            { username: credentials.identifier } //allowing user to login with either email or username
                         ]
                     })
                     if (!user) {
@@ -61,7 +62,7 @@ export const authOptions: NextAuthOptions = {
         }
     },
     pages :{
-        signIn : '/auth/sign-in',
+        signIn : '/sign-in', //custom sign in page the api call will be made to this page for this sign in backend 
     },
     session : {
         strategy : 'jwt',
