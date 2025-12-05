@@ -63,7 +63,8 @@ export async function GET(request: Request) {
     //get the session of the user making the request
     const session = await getServerSession(authOptions);
     //store the user from the session in user variable
-    const user : User  = session?.user as User ;
+    const user : User  = session?.user as User ; //here we are asserting that session.user is of type User and  user is of type User( here the User type is imported from next-auth which represents the user object in the session)
+
     if(!session || !session.user){
         return Response.json({
             success: false,

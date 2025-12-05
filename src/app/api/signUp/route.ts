@@ -12,6 +12,15 @@ export async function POST(request: Request) {
         //take the input form the user from the front end
         const { username, email, password } = await request.json()
 
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !emailRegex.test(email.trim())) {
+            return Response.json({
+                success: false,
+                message: "Invalid email format provided."
+            }, { status: 400 })
+        }
+
         const existingUserVerifiedByUsername = await UserModel.findOne({
             username: username,
             isVerified: true
@@ -75,8 +84,8 @@ export async function POST(request: Request) {
         }
         
         //this function only sends the vefication code when the user is registered successfully and not verified yet and also if the user is already registered but not verified then also it will send the verification code again
-        // Send verification email
-        const emailResponse = await sendVerificationEmail(username , email , verificationCode)
+        // Send verification email - Note: parameters are (email, username, verificationCode)
+        const emailResponse = await sendVerificationEmail(email.trim().toLowerCase(), username, verificationCode)
         if (!emailResponse.success) {
             return Response.json({
                 success: false,
