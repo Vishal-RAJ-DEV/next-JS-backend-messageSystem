@@ -1,6 +1,6 @@
 import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/model/user";
-import { message } from "@/model/user"; //importing message type from user model so that we can use it to type the message object
+import { Message } from "@/model/user"; //importing message type from user model so that we can use it to type the message object
 
 export async function POST(request: Request) {
     await dbConnect();
@@ -23,7 +23,7 @@ export async function POST(request: Request) {
         }
 
         const newMessage = {content , createdAt : new Date()}
-        user.messages.push(newMessage as message); //push the new message to the messages array of the user
+        user.messages.push(newMessage as Message); //push the new message to the messages array of the user
         await user.save(); //save the user document with the new message
         
         

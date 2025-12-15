@@ -1,12 +1,12 @@
 import mongoose , {Schema , Document} from "mongoose";
 
 //document is an interface provided by mongoose which represents a document in MongoDB and its needed for type checking
-export interface message extends Document { //here interface is used to define the structure of a message document in MongoDB
+export interface Message extends Document { //here interface is used to define the structure of a message document in MongoDB
     content  : string;
     createdAt: Date;
 }
 
-const messageSchema = new Schema<message>({//here we define the schema for the message document this is used by mongoose to create the model and interact with the database
+const messageSchema = new Schema<Message>({//here we define the schema for the message document this is used by mongoose to create the model and interact with the database
     content :{
         type: String,
         required: true
@@ -27,7 +27,7 @@ export interface User extends Document {
     verifiedCodeExpiry : Date;
     isVerified : boolean;
     isAcceptingMessages : boolean;
-    messages : message[]; //array of message subdocuments
+    messages : Message[]; //array of message subdocuments
 }
 
 const userSchema = new Schema<User>({
