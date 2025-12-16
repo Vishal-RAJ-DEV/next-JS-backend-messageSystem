@@ -49,7 +49,7 @@ const DashboardPage = () => {
   })
 
   const { setValue } = form;
-  const isAcceptingMessages = form.watch("isAcceptingMessages");
+  const isAcceptingMessages = form.watch("isAcceptingMessages"); //this will watch the isAcceptingMessages field value is true or false 
 
   // Fetch accepting messages preference
   const fetchAcceptingMessages = useCallback(async () => {
@@ -243,7 +243,7 @@ const DashboardPage = () => {
             <Switch
               id="accept-messages"
               checked={isAcceptingMessages}
-              onCheckedChange={toggleAcceptMessages}
+              onCheckedChange={toggleAcceptMessages} //this will call the toggleAcceptMessages function which will flip the isAcceptingMessages value
               disabled={isSwitchLoading}
             />
           </div>
