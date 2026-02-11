@@ -36,7 +36,16 @@ const DashboardPage = () => {
   const [isSwitchLoading, setIsSwitchLoading] = useState(false)
 
   const handleDeleteMessage = async (messageId: string) => {
-    setMessages((prev) => prev.filter((msg) => msg._id !== messageId))
+    try {
+      const response = await axios.delete<ApiResponse>(`/api/deleteMesssage/${messageId}`)
+      toast.success(response.data.message);
+      setMessages((prev) => prev.filter((msg) => msg._id !== messageId))
+    } catch (error) {
+      const axiosError = error as AxiosError<ApiResponse>;
+      toast.error(
+        axiosError.response?.data.message || "Failed to delete message"
+      );
+    }
   }
 
   const { data: session } = useSession();
@@ -84,13 +93,13 @@ const DashboardPage = () => {
     } finally {
       setIsLoading(false)
     }
-  }, [])
+  },[])
 
   useEffect(() => {
     if (!session || !session.user) return;
     fetchAcceptingMessages();
     fetchMessages();
-  }, [session, fetchAcceptingMessages, fetchMessages])
+  }, [session?.user?.id])
 
   const toggleAcceptMessages = async () => {
     setIsSwitchLoading(true)
@@ -112,7 +121,7 @@ const DashboardPage = () => {
 
   if (!session || !session.user) {
     return (
-      <div className="w-full h-full flex items-center justify-center">
+      <div className="w-full min-h-screen flex items-center justify-center">
         <Card className="w-96">
           <CardContent className="pt-6">
             <div className="text-center">
@@ -140,7 +149,7 @@ const DashboardPage = () => {
   }
 
   return (
-    <div className="w-full h-full space-y-6">
+    <div className="w-full min-h-screen space-y-6">
       {/* Header */}
       <div className="flex flex-col space-y-2">
         <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>

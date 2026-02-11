@@ -27,9 +27,9 @@ export function SidebarWrapper({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession();
 
   // Don't show sidebar on auth pages
-  const isAuthPage = pathname.startsWith("/sign-in") || 
-                     pathname.startsWith("/sign-up") || 
-                     pathname.startsWith("/verify");
+  const isAuthPage = pathname.startsWith("/sign-in") ||
+    pathname.startsWith("/sign-up") ||
+    pathname.startsWith("/verify");
 
   if (isAuthPage) {
     return <>{children}</>;
@@ -58,7 +58,7 @@ export function SidebarWrapper({ children }: { children: React.ReactNode }) {
   // Protected links only available to authenticated users
   const protectedLinks = [
     {
-      label: "Dashboard", 
+      label: "Dashboard",
       href: "/dashboard",
       icon: (
         <IconBrandTabler className="text-neutral-700 dark:text-neutral-200 h-5 w-5 shrink-0" />
@@ -98,15 +98,15 @@ export function SidebarWrapper({ children }: { children: React.ReactNode }) {
   };
 
   // Combine links based on authentication status
-  const links: any[] = session && session.user 
-    ? [...baseLinks, ...protectedLinks, logoutLink] 
+  const links: any[] = session && session.user
+    ? [...baseLinks, ...protectedLinks, logoutLink]
     : [...baseLinks, loginLink];
 
   return (
     <div
       className={cn(
         "flex flex-col md:flex-row bg-gray-100 dark:bg-neutral-800 w-full flex-1 mx-auto border border-neutral-200 dark:border-neutral-700 overflow-hidden",
-        "h-screen"
+        "min-h-screen"
       )}
     >
       <Sidebar open={open} setOpen={setOpen}>
@@ -115,18 +115,19 @@ export function SidebarWrapper({ children }: { children: React.ReactNode }) {
             {open ? <Logo /> : <LogoIcon />}
             <div className="mt-8 flex flex-col gap-2">
               {links.map((link, idx) => (
-                <SidebarLink 
-                  key={idx} 
+                <SidebarLink
+                  key={idx}
                   link={link}
                   onClick={link.onClick}
                 />
               ))}
             </div>
           </div>
+          {/* ✅ Fix: Move SidebarUserInfo to bottom of SidebarBody */}
           {session && session.user && <SidebarUserInfo />}
         </SidebarBody>
       </Sidebar>
-      <div className="flex flex-1 overflow-auto">
+      <div className="flex flex-1 overflow-hidden">
         <div className="p-2 md:p-10 rounded-tl-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 flex flex-col gap-2 flex-1 w-full h-full">
           {children}
         </div>
@@ -164,7 +165,7 @@ export const LogoIcon = () => {
   );
 };
 
-// Simplified user info component (just displays user info, no buttons)
+// ✅ Fix: Improved user info component with proper collapsed state
 export const SidebarUserInfo = () => {
   const { data: session } = useSession();
   const { open, animate } = useSidebar();
@@ -173,14 +174,21 @@ export const SidebarUserInfo = () => {
   if (!user) return null;
 
   return (
-    <div className="border-t border-neutral-200 dark:border-neutral-700 pt-4 mt-auto">
-      <div className="flex items-center gap-3 px-2 py-3">
-        {/* User Avatar */}
-        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-semibold shrink-0">
-          {user.username?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase()}
+    <div className="border-t border-neutral-200 dark:border-neutral-700 pt-4">
+      <div className="flex items-center gap-3  py-3">
+        {/* ✅ Fix: User Avatar - Always visible, centered when collapsed */}
+        <div className={cn(
+          "rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-semibold shrink-0 transition-all duration-200",
+          open ? "w-10 h-10" : "w-8 h-8 mx-auto" // ✅ Smaller and centered when collapsed
+        )}>
+          <span className={cn(
+            open ? "text-sm" : "text-xs" // ✅ Smaller text when collapsed
+          )}>
+            {user.username?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase()}
+          </span>
         </div>
 
-        {/* User Info - Hidden when sidebar is collapsed */}
+        {/* ✅ Fix: User Info - Only show when expanded */}
         <motion.div
           animate={{
             display: animate ? (open ? "block" : "none") : "block",

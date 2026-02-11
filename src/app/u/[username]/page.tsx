@@ -38,7 +38,7 @@ const SendMessagePage = () => {
   })
 
   const { setValue } = form;
-  
+
   // Fix: Watch the correct field name from schema
   const messageContent = form.watch('message'); // ← Fix: Use 'message' not 'content'
 
@@ -49,7 +49,7 @@ const SendMessagePage = () => {
         content: data.message, // Send as 'content' to API but use 'message' in form
         username: username,
       });
-      
+
       toast.success("Message sent successfully!");
       form.reset();
     } catch (error) {

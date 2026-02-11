@@ -67,7 +67,7 @@ const userSchema = new Schema<User>({
         type: Boolean,
         default: false
     },
-    messages: [messageSchema] //array of message subdocuments
+    messages: [messageSchema], //array of message subdocuments
     
 })
 

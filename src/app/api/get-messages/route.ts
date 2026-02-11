@@ -22,7 +22,7 @@ export async function GET(request: Request) {
         //here what we are doing that we are using aggregation to unwind the messages array and then group them back to get all messages for the user
         // for eg if user has 3 messages then unwind will create 3 documents for that user each with one message and then group will push all those messages back to messages array
         // the group will put all messages in messages array for that user and user id will be same
-        const user = await UserModel.aggregate([
+        const userMessage = await UserModel.aggregate([
             { $match: { _id: userId } },
             { $unwind : '$messages'},
             { $group : {
@@ -31,16 +31,16 @@ export async function GET(request: Request) {
             }}
         ])
 
-        if(!user || user.length === 0){
+        if(!userMessage || userMessage.length === 0){
             return Response.json({
                 success: false,
-                message: "User not found."
-            } , { status: 404 })
+                message: "No messages found for the user."
+            }, { status: 404 })
         }
 
         return Response.json({
             success: true,
-            messages: user[0].messages  //return the messages array from the first (and only) document in the user array
+            messages: userMessage[0].messages  //return the messages array from the first (and only) document in the user array
         } , { status: 200 })
         
     } catch (error) {
